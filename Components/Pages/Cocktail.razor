@@ -1,0 +1,31 @@
+﻿@page "/cocktail"
+@using SOA_CA1.Services;
+
+@inject CocktailService CocktailService
+
+<h3>Search for a Cocktail</h3>
+
+<input @bind="searchTerm" placeholder="Enter cocktail name" />
+<button @onclick="SearchCocktail">Search</button>
+
+@if (cocktailResponse != null)
+{
+    @foreach (var drink in cocktailResponse.Drinks)
+    {
+        <div>   
+            <h4>@drink.StrDrink</h4>
+            <p>@drink.StrInstructions</p>
+            <img src="@drink.StrDrinkThumb" alt="@drink.StrDrink" width="200px" />
+        </div>
+    }
+}
+
+@code {
+    private string searchTerm;
+    private CocktailResponse cocktailResponse;
+
+    private async Task SearchCocktail()
+    {
+        cocktailResponse = await CocktailService.GetCocktailByName(searchTerm);
+    }
+}

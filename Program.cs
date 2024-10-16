@@ -1,4 +1,5 @@
 using SOA_CA1.Components;
+using SOA_CA1.Services;
 
 namespace SOA_CA1
 {
@@ -11,6 +12,10 @@ namespace SOA_CA1
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            builder.Services.AddScoped<CocktailService>();
+
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://www.thecocktaildb.com/") });
 
             var app = builder.Build();
 
