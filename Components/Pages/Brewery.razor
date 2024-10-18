@@ -4,15 +4,17 @@
 
 <h3>Breweries</h3>
 
+<input type="text" @bind="searchText" placeholder="Search breweries by name..." />
+<button @onclick="SearchBreweries">Search</button>
 
 @if (isLoading)
 {
     <p>Loading...</p>
 }
-else if (breweries != null && breweries.Count > 0)
+else if (filteredBreweries != null && filteredBreweries.Count > 0)
 {
     <ul>
-        @foreach (var brewery in breweries)
+        @foreach (var brewery in filteredBreweries )
         {
             <li>
                 <strong>@brewery.Name</strong> <br />
@@ -35,12 +37,30 @@ else if (breweries != null && breweries.Count == 0)
 
 @code {
     private List<SOA_CA1.Brewery>? breweries;
+    private List<SOA_CA1.Brewery>? filteredBreweries;
     private bool isLoading = false;
+    private string searchText = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         isLoading = true;
         breweries = await BreweryService.GetAllBreweries();
+        filteredBreweries = breweries; 
         isLoading = false;
+    }
+
+    private void SearchBreweries()
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            filteredBreweries = breweries;
+        }
+        else
+        {
+            filteredBreweries = breweries
+                .Where(b => b.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+        StateHasChanged();
     }
 }

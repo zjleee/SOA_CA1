@@ -3,43 +3,104 @@
 @inject CocktailService CocktailService
 
 <h3>All Cocktails</h3>
+<input type="text" @bind="searchText" placeholder="Search cocktails by name..." />
+<button @onclick="SearchCocktails">Search</button>
+
 
 @if (isLoading)
 {
     <p>Loading...</p>
 }
-else if (allCocktails != null)
+else if (filteredCocktails != null && filteredCocktails.Any())
 {
     <ul>
-        @foreach (var drink in allCocktails)
+        @foreach (var drink in filteredCocktails)
         {
             <li>
-                <strong>@drink.Name</strong><br />
-                <img src="@drink.Image" alt="@drink.Name" width="150" /><br />
-                <p><strong>Ingredients:</strong></p>
-                <ul>
-                    @foreach (var ingredient in drink.IngredientsWithMeasurements)
-                    {
-                        <li>@ingredient</li>
-                    }
-                </ul>
+                <!-- Debugging output -->
+                @if (!string.IsNullOrEmpty(drink.Name))
+                {
+                    <strong>@drink.Name</strong>
+
+                    <br />
+                }
+                else
+                {
+                    <p>No Name Available</p>
+                }
+
+                <!-- Debugging output for the image -->
+                @if (!string.IsNullOrEmpty(drink.Image))
+                {
+                    <img src="@drink.Image" alt="@drink.Name" width="150" />
+
+                    <br />
+                }
+                else
+                {
+                    <p>No Image Available</p>
+                }
+
+                <!-- Debugging output for ingredients -->
+                @if (drink.IngredientsWithMeasurements != null && drink.IngredientsWithMeasurements.Any())
+                {
+                    <p><strong>Ingredients:</strong></p>
+                    <ul>
+                        @foreach (var ingredient in drink.IngredientsWithMeasurements)
+                        {
+                            <li>@ingredient</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No Ingredients Available</p>
+                }
+
+                <!-- Instructions -->
                 <p>@drink.Instructions</p>
             </li>
         }
     </ul>
 }
+else
+{
+    <p>No cocktail found.</p>
+}
 
 @code {
     private List<SOA_CA1.Cocktail> allCocktails;
+    private List<SOA_CA1.Cocktail> filteredCocktails;
     private bool isLoading = false;
+    private string searchText = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         isLoading = true;
         allCocktails = await CocktailService.GetAllCocktails();
-
+        filteredCocktails = allCocktails.OrderBy(c => Guid.NewGuid()).Take(10).ToList();
         isLoading = false;
 
+    }
+
+    private async Task SearchCocktails()
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            filteredCocktails = allCocktails;
+        }
+        else
+        {
+            filteredCocktails = allCocktails
+                .Where(c => c.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            foreach (var cocktail in filteredCocktails)
+            {
+                Console.WriteLine($"Found cocktail: {cocktail.Name}");
+            }
+        }
+        StateHasChanged();
     }
 
     private async Task SaveCocktails()

@@ -56,7 +56,6 @@ public class CocktailService
                 {
                     foreach (var drink in result.Drinks)
                     {
-                        // Populate combined ingredients
                         drink.PopulateIngredientsWithMeasurements();
                         drink.SetAlcoholicType();
                     }
