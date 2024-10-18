@@ -16,15 +16,12 @@ namespace SOA_CA1.Services
         {
             try
             {
-                // Define the base URL for the API
                 _httpClient.BaseAddress = new Uri("https://api.openbrewerydb.org/v1/");
                 _httpClient.DefaultRequestHeaders.Accept.Clear();
                 _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                // Make the GET request to the "breweries" endpoint
                 HttpResponseMessage response = await _httpClient.GetAsync("breweries");
 
-                // If the request is successful, parse the JSON response
                 if (response.IsSuccessStatusCode)
                 {
                     var data = await response.Content.ReadAsStringAsync();

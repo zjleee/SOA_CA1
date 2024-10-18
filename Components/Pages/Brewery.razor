@@ -2,9 +2,11 @@
 @using SOA_CA1.Services
 @inject BreweryService BreweryService
 
+<link href="css/brewery.css" rel="stylesheet" />
+
 <h3>Breweries</h3>
 
-<input type="text" @bind="searchText" placeholder="Search breweries by name..." />
+<input type="text" @bind="searchText" placeholder="Search breweries by name" />
 <button @onclick="SearchBreweries">Search</button>
 
 @if (isLoading)
@@ -41,12 +43,14 @@ else if (breweries != null && breweries.Count == 0)
     private bool isLoading = false;
     private string searchText = string.Empty;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         isLoading = true;
+        StateHasChanged();
         breweries = await BreweryService.GetAllBreweries();
         filteredBreweries = breweries; 
         isLoading = false;
+        StateHasChanged();
     }
 
     private void SearchBreweries()
