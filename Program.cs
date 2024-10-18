@@ -19,7 +19,6 @@ namespace SOA_CA1
             builder.Services.AddScoped<BreweryService>();
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://www.thecocktaildb.com/") });
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://www.thecocktaildb.com/") });
 
             var app = builder.Build();
 

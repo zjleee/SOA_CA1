@@ -24,15 +24,12 @@ public class CocktailService
 
         if (File.Exists(filePath))
         {
-            // Read from the local JSON file if it exists
             return await ReadCocktailsFromFileAsync(filePath);
         }
         else
         {
-            // Fetch from API if the file does not exist
             var allCocktails = await FetchCocktailsFromApi();
 
-            // Save the fetched data to the JSON file
             await SaveCocktailsToFileAsync(allCocktails, filePath);
 
             return allCocktails;
@@ -56,7 +53,6 @@ public class CocktailService
                 {
                     foreach (var drink in result.Drinks)
                     {
-                        // Populate combined ingredients
                         drink.PopulateIngredientsWithMeasurements();
                         drink.SetAlcoholicType();
                     }
