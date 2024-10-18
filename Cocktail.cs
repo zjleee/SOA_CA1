@@ -1,21 +1,11 @@
 ﻿
 using Newtonsoft.Json;
 using SOA_CA1.Enums;
-using SOA_CA1.Interfaces;
 
 namespace SOA_CA1
 {
-    public class Cocktail : IEntity
+    public class Cocktail : Drink
     {
-        [JsonProperty("idDrink")]
-        public string Id { get; set; }
-
-        [JsonProperty("strDrink")]
-        public string Name { get; set; }
-
-        [JsonProperty("strInstructions")]
-        public string Instructions { get; set; }
-
         [JsonProperty("strDrinkThumb")]
         public string Image { get; set; }
 
@@ -24,7 +14,7 @@ namespace SOA_CA1
         public AlcoholicType Alcoholic { get; set; }
         public List<string> IngredientsWithMeasurements { get; set; } = new List<string>();
 
-        public void PopulateIngredientsWithMeasurements()
+        public virtual void PopulateIngredientsWithMeasurements()
         {
             IngredientsWithMeasurements.Clear();
 
@@ -41,6 +31,17 @@ namespace SOA_CA1
                     string combined = string.IsNullOrEmpty(measure) ? ingredient : $"{measure} {ingredient}";
                     IngredientsWithMeasurements.Add(combined);
                 }
+            }
+        }
+
+        public override void DisplayDrinkInfo()
+        {
+            System.Console.WriteLine($"Name: {Name}");
+            System.Console.WriteLine($"Alcoholic Type: {Alcoholic}");
+            System.Console.WriteLine($"Ingredients:");
+            foreach (var ingredient in IngredientsWithMeasurements)
+            {
+                System.Console.WriteLine($"- {ingredient}");
             }
         }
         public void SetAlcoholicType()

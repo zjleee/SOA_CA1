@@ -4,7 +4,6 @@
 
 <h3>Breweries</h3>
 
-<button @onclick="FetchBreweries">Fetch Breweries</button>
 
 @if (isLoading)
 {
@@ -35,10 +34,10 @@ else if (breweries != null && breweries.Count == 0)
 }
 
 @code {
-    private List<SOA_CA1.Brewery> breweries;
+    private List<SOA_CA1.Brewery>? breweries;
     private bool isLoading = false;
 
-    private async Task FetchBreweries()
+    protected override async Task OnInitializedAsync()
     {
         isLoading = true;
         breweries = await BreweryService.GetAllBreweries();

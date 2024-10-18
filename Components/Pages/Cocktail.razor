@@ -1,9 +1,8 @@
 ﻿@page "/cocktails"
+@page "/"
 @inject CocktailService CocktailService
 
 <h3>All Cocktails</h3>
-
-<button @onclick="FetchCocktails">Fetch Cocktails</button>
 
 @if (isLoading)
 {
@@ -34,12 +33,10 @@ else if (allCocktails != null)
     private List<SOA_CA1.Cocktail> allCocktails;
     private bool isLoading = false;
 
-    private async Task FetchCocktails()
+    protected override async Task OnInitializedAsync()
     {
         isLoading = true;
         allCocktails = await CocktailService.GetAllCocktails();
-
-        await SaveCocktails();
 
         isLoading = false;
 
