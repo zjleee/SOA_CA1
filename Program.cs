@@ -13,6 +13,8 @@ namespace SOA_CA1
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
+            builder.Services.AddHttpClient();
+
             builder.Services.AddScoped<CocktailService>();
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://www.thecocktaildb.com/") });

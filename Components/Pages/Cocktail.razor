@@ -1,31 +1,56 @@
-﻿@page "/cocktail"
-@using SOA_CA1.Services;
-
+﻿@page "/cocktails"
 @inject CocktailService CocktailService
 
-<h3>Search for a Cocktail</h3>
+<h3>All Cocktails</h3>
 
-<input @bind="searchTerm" placeholder="Enter cocktail name" />
-<button @onclick="SearchCocktail">Search</button>
+<button @onclick="FetchCocktails">Fetch Cocktails</button>
 
-@if (cocktailResponse != null)
+@if (isLoading)
 {
-    @foreach (var drink in cocktailResponse.Drinks)
-    {
-        <div>   
-            <h4>@drink.StrDrink</h4>
-            <p>@drink.StrInstructions</p>
-            <img src="@drink.StrDrinkThumb" alt="@drink.StrDrink" width="200px" />
-        </div>
-    }
+    <p>Loading...</p>
+}
+else if (allCocktails != null)
+{
+    <ul>
+        @foreach (var drink in allCocktails)
+        {
+            <li>
+                <strong>@drink.Name</strong><br />
+                <img src="@drink.Image" alt="@drink.Name" width="150" /><br />
+                <p><strong>Ingredients:</strong></p>
+                <ul>
+                    @foreach (var ingredient in drink.IngredientsWithMeasurements)
+                    {
+                        <li>@ingredient</li>
+                    }
+                </ul>
+                <p>@drink.Instructions</p>
+            </li>
+        }
+    </ul>
 }
 
 @code {
-    private string searchTerm;
-    private CocktailResponse cocktailResponse;
+    private List<Drink> allCocktails;
+    private bool isLoading = false;
 
-    private async Task SearchCocktail()
+    private async Task FetchCocktails()
     {
-        cocktailResponse = await CocktailService.GetCocktailByName(searchTerm);
+        isLoading = true;
+        allCocktails = await CocktailService.GetAllCocktails();
+
+        await SaveCocktails();
+
+        isLoading = false;
+
+    }
+
+    private async Task SaveCocktails()
+    {
+        string filePath = "cocktails.json";
+        if (allCocktails != null && allCocktails.Count > 0)
+        {
+            await CocktailService.SaveCocktailsToFileAsync(allCocktails, filePath);
+        }
     }
 }
