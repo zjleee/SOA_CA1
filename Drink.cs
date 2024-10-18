@@ -1,24 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿
+using Newtonsoft.Json;
+using SOA_CA1.Enums;
 
 namespace SOA_CA1
 {
-
     public class Drink
     {
-        [JsonProperty("idDrink")]
         public string Id { get; set; }
-
-        [JsonProperty("strDrink")]
         public string Name { get; set; }
-
-        [JsonProperty("strInstructions")]
         public string Instructions { get; set; }
-
-        [JsonProperty("strDrinkThumb")]
         public string Image { get; set; }
 
         [JsonProperty("strAlcoholic")]
-        public string Alcoholic { get; set; }
+        public string AlcoholicString { get; set; }
+        public AlcoholicType Alcoholic { get; set; }
         public List<string> IngredientsWithMeasurements { get; set; } = new List<string>();
 
         public void PopulateIngredientsWithMeasurements()
@@ -39,6 +34,10 @@ namespace SOA_CA1
                     IngredientsWithMeasurements.Add(combined);
                 }
             }
+        }
+        public void SetAlcoholicType()
+        {
+            Alcoholic = Enum.TryParse<AlcoholicType>(AlcoholicString, true, out var result) ? result : AlcoholicType.Unknown;
         }
     }
 }

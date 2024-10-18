@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 namespace SOA_CA1.Services;
+
+using SOA_CA1.Enums;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -56,6 +58,7 @@ public class CocktailService
                     {
                         // Populate combined ingredients
                         drink.PopulateIngredientsWithMeasurements();
+                        drink.SetAlcoholicType();
                     }
                     allCocktails.AddRange(result.Drinks);
                 }
@@ -74,7 +77,7 @@ public class CocktailService
             Name = drink.Name,
             Instructions = drink.Instructions,
             Image = drink.Image,
-            Alcoholic = drink.Alcoholic,
+            Alcoholic = drink.Alcoholic.ToString(),
             IngredientsWithMeasurements = drink.IngredientsWithMeasurements
         }).ToList();
 
@@ -96,7 +99,7 @@ public class CocktailService
                 Name = dto.Name,
                 Instructions = dto.Instructions,
                 Image = dto.Image,
-                Alcoholic = dto.Alcoholic,
+                Alcoholic = Enum.TryParse<AlcoholicType>(dto.Alcoholic, true, out var result) ? result : AlcoholicType.Unknown,
                 IngredientsWithMeasurements = dto.IngredientsWithMeasurements
             }).ToList();
         }
