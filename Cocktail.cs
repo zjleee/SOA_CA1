@@ -1,14 +1,22 @@
 ﻿
 using Newtonsoft.Json;
 using SOA_CA1.Enums;
+using SOA_CA1.Interfaces;
 
 namespace SOA_CA1
 {
-    public class Drink
+    public class Cocktail : IEntity
     {
+        [JsonProperty("idDrink")]
         public string Id { get; set; }
+
+        [JsonProperty("strDrink")]
         public string Name { get; set; }
+
+        [JsonProperty("strInstructions")]
         public string Instructions { get; set; }
+
+        [JsonProperty("strDrinkThumb")]
         public string Image { get; set; }
 
         [JsonProperty("strAlcoholic")]

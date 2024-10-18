@@ -18,7 +18,7 @@ public class CocktailService
         _httpClient = httpClient;
     }
 
-    public async Task<List<Drink>> GetAllCocktails()
+    public async Task<List<Cocktail>> GetAllCocktails()
     {
         string filePath = "cocktails.json";
 
@@ -39,9 +39,9 @@ public class CocktailService
         }
     }
 
-    private async Task<List<Drink>> FetchCocktailsFromApi()
+    private async Task<List<Cocktail>> FetchCocktailsFromApi()
     {
-        var allCocktails = new List<Drink>();
+        var allCocktails = new List<Cocktail>();
         string baseUrl = "https://www.thecocktaildb.com/api/json/v1/1/search.php?f=";
         string allCharacters = "abcdefghijklmnopqrstuvwxyz123456789";
 
@@ -68,10 +68,10 @@ public class CocktailService
         return allCocktails;
     }
 
-    public async Task SaveCocktailsToFileAsync(List<Drink> drinks, string filePath)
+    public async Task SaveCocktailsToFileAsync(List<Cocktail> drinks, string filePath)
     {
         var options = new JsonSerializerOptions { WriteIndented = true };
-        var drinkDTOs = drinks.Select(drink => new DrinkDTO
+        var drinkDTOs = drinks.Select(drink => new CocktailDTO
         {
             Id = drink.Id,
             Name = drink.Name,
@@ -88,12 +88,12 @@ public class CocktailService
     }
 
 
-    public async Task<List<Drink>> ReadCocktailsFromFileAsync(string filePath)
+    public async Task<List<Cocktail>> ReadCocktailsFromFileAsync(string filePath)
     {
         using (FileStream openStream = File.OpenRead(filePath))
         {
-            var drinkDTOs = await System.Text.Json.JsonSerializer.DeserializeAsync<List<DrinkDTO>>(openStream);
-            return drinkDTOs.Select(dto => new Drink
+            var drinkDTOs = await System.Text.Json.JsonSerializer.DeserializeAsync<List<CocktailDTO>>(openStream);
+            return drinkDTOs.Select(dto => new Cocktail
             {
                 Id = dto.Id,
                 Name = dto.Name,
@@ -108,7 +108,7 @@ public class CocktailService
     public class CocktailResponse
     {
         [JsonProperty("drinks")]
-        public List<Drink>? Drinks { get; set; }
+        public List<Cocktail>? Drinks { get; set; }
     }
 
 }

@@ -1,0 +1,47 @@
+﻿@page "/breweries"
+@using SOA_CA1.Services
+@inject BreweryService BreweryService
+
+<h3>Breweries</h3>
+
+<button @onclick="FetchBreweries">Fetch Breweries</button>
+
+@if (isLoading)
+{
+    <p>Loading...</p>
+}
+else if (breweries != null && breweries.Count > 0)
+{
+    <ul>
+        @foreach (var brewery in breweries)
+        {
+            <li>
+                <strong>@brewery.Name</strong> <br />
+                Type: @brewery.BreweryType <br />
+                Location: @brewery.City, @brewery.State, @brewery.Country <br />
+                @if (!string.IsNullOrEmpty(brewery.WebsiteUrl))
+                {
+                    <span>URL: </span>
+                    <a href="@brewery.WebsiteUrl" target="_blank">@brewery.WebsiteUrl</a>
+                }
+                <br /><br />
+            </li>
+        }
+    </ul>
+}
+else if (breweries != null && breweries.Count == 0)
+{
+    <p>No breweries found.</p>
+}
+
+@code {
+    private List<SOA_CA1.Brewery> breweries;
+    private bool isLoading = false;
+
+    private async Task FetchBreweries()
+    {
+        isLoading = true;
+        breweries = await BreweryService.GetAllBreweries();
+        isLoading = false;
+    }
+}

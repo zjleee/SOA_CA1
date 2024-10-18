@@ -1,6 +1,6 @@
 ﻿namespace SOA_CA1
 {
-    public class DrinkDTO
+    public class CocktailDTO
     {
         public string Id { get; set; }
         public string Name { get; set; }
